@@ -1,0 +1,583 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MedScope AI — Multi-Disease Screening Demo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brandmark">✚</div>
+            <div>
+                <b>MedScope</b>
+                <small>AI HEALTH LAB</small>
+            </div>
+        </div>
+
+        <div class="side-label">PREDICTION TOOLS</div>
+
+        <nav id="nav">
+            {% for key,d in diseases.items() %}
+            <button class="navitem {% if loop.first %}active{% endif %}" data-disease="{{key}}">
+                <span class="navicon">
+                    {% if key=='heart' %}♡
+                    {% elif key=='diabetes' %}◉
+                    {% elif key=='kidney' %}◈
+                    {% elif key=='breast_cancer' %}⌕
+                    {% endif %}
+                </span>
+                {{d.title}}
+            </button>
+            {% endfor %}
+        </nav>
+
+        <div class="side-bottom">
+            <div class="secure">
+                <span>●</span> Demo environment
+            </div>
+            <small>
+                Research & education only<br>
+                Not for medical decisions
+            </small>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+                <div class="eyebrow">AI-POWERED HEALTH ANALYTICS</div>
+                <h1>Multi-Disease Prediction</h1>
+            </div>
+
+            <div class="top-right">
+                <span class="status-dot"></span>
+                <span>API connected</span>
+                <div class="avatar">MS</div>
+            </div>
+
+        </header>
+
+
+        <!-- WELCOME SECTION -->
+        <section class="welcome">
+
+            <div>
+                <div class="eyebrow light">WELCOME TO MEDSCOPE AI</div>
+
+                <h2>
+                    Explore health patterns<br>
+                    <em>with machine learning.</em>
+                </h2>
+
+                <p>
+                    Select a model, enter the required benchmark features,
+                    and view its experimental classification output.
+                </p>
+            </div>
+
+            <div class="welcome-art">
+                <div class="orb orb1"></div>
+                <div class="orb orb2"></div>
+                <div class="pulse">✚</div>
+                <div class="ring"></div>
+            </div>
+
+        </section>
+
+
+        <!-- DASHBOARD -->
+        <div class="content-grid">
+
+            <!-- INPUT PANEL -->
+            <section class="panel form-panel">
+
+                <div class="panel-head">
+
+                    <div>
+                        <div class="eyebrow">MODEL INPUT</div>
+                        <h3 id="diseaseTitle">Heart Disease</h3>
+                        <p id="diseaseDesc">
+                            Enter the clinical measurements below.
+                        </p>
+                    </div>
+
+                    <span class="model-tag">ML MODEL</span>
+
+                </div>
+
+
+                <div class="form-meta">
+                    <span>INPUT PARAMETERS</span>
+                    <span id="fieldCount">13 FIELDS</span>
+                </div>
+
+
+                <form id="predictForm">
+
+                    <div id="fields" class="fields"></div>
+
+                    <div class="form-actions">
+
+                        <button type="reset" class="btn secondary" id="resetBtn">
+                            ↺ &nbsp;Reset fields
+                        </button>
+
+                        <button type="submit" class="btn primary" id="predictBtn">
+                            Run prediction <span>→</span>
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <div id="error" class="error" hidden></div>
+
+            </section>
+
+
+            <!-- RIGHT COLUMN -->
+            <aside class="right-col">
+
+                <!-- RESULT PANEL -->
+                <section class="panel result-panel">
+
+                    <div class="panel-head">
+
+                        <div>
+                            <div class="eyebrow">MODEL OUTPUT</div>
+                            <h3>Prediction result</h3>
+                        </div>
+
+                        <div class="result-icon">✧</div>
+
+                    </div>
+
+
+                    <div id="emptyState" class="empty">
+
+                        <div class="empty-icon">⌁</div>
+
+                        <b>Awaiting your input</b>
+
+                        <p>
+                            Complete the form and run the model
+                            to see its output here.
+                        </p>
+
+                    </div>
+
+
+                    <div id="resultState" hidden>
+
+                        <div class="result-label" id="resultLabel">
+                            —
+                        </div>
+
+
+                        <div class="confidence">
+
+                            <div>
+                                <span>Model output score</span>
+                                <b id="confidenceValue">—</b>
+                            </div>
+
+                            <div class="bar">
+                                <i id="confidenceBar"></i>
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-row">
+
+                            <div>
+                                <small>Test accuracy</small>
+                                <b id="metricAccuracy">—</b>
+                            </div>
+
+                            <div>
+                                <small>Balanced accuracy</small>
+                                <b id="metricBalanced">—</b>
+                            </div>
+
+                            <div>
+                                <small>ROC-AUC</small>
+                                <b id="metricAuc">—</b>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="disclaimer">
+
+                        <b>ⓘ Important</b>
+
+                        <p id="disclaimer">
+                            This is an educational machine-learning demonstration,
+                            not a medical diagnosis. Do not use it to make
+                            healthcare decisions.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- INFORMATION PANEL -->
+                <section class="panel info-panel">
+
+                    <div class="eyebrow">HOW IT WORKS</div>
+
+                    <div class="step">
+                        <span>01</span>
+                        <div>
+                            <b>Choose a model</b>
+                            <small>
+                                Each disease uses its own dataset
+                                and trained pipeline.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <span>02</span>
+                        <div>
+                            <b>Enter measurements</b>
+                            <small>
+                                Use values from the relevant dataset
+                                or clinical report.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <span>03</span>
+                        <div>
+                            <b>Review the output</b>
+                            <small>
+                                Model scores are not calibrated
+                                medical probabilities.
+                            </small>
+                        </div>
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+
+        <footer>
+            MedScope AI
+            <span>•</span>
+            Educational machine-learning project
+            <span>•</span>
+            Benchmark datasets only
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+<script>
+
+const activeFields = document.getElementById('fields');
+
+let current = 'heart';
+
+
+// --------------------------------------------------
+// LOAD DISEASE SCHEMA
+// --------------------------------------------------
+
+async function loadDisease(id) {
+
+    current = id;
+
+    document.querySelectorAll('.navitem').forEach(button => {
+        button.classList.toggle(
+            'active',
+            button.dataset.disease === id
+        );
+    });
+
+    try {
+
+        const response = await fetch('/api/schema/' + id);
+
+        if (!response.ok) {
+            throw new Error('Unable to load disease schema.');
+        }
+
+        const disease = await response.json();
+
+        document.getElementById('diseaseTitle').textContent =
+            disease.title;
+
+        document.getElementById('diseaseDesc').textContent =
+            disease.description;
+
+        document.getElementById('fieldCount').textContent =
+            disease.fields.length + ' FIELDS';
+
+
+        activeFields.innerHTML = '';
+
+        disease.fields.forEach(field => {
+
+            const [key, label, type, min, max, defaultValue] = field;
+
+            const wrapper = document.createElement('label');
+
+            wrapper.className = 'field';
+
+            let input;
+
+
+            if (type === 'select') {
+
+                input = document.createElement('select');
+
+                min.forEach(value => {
+
+                    const option = document.createElement('option');
+
+                    option.value = value;
+                    option.textContent = value;
+
+                    input.appendChild(option);
+
+                });
+
+            } else {
+
+                input = document.createElement('input');
+
+                input.type = 'number';
+                input.step = 'any';
+
+                if (min !== null) input.min = min;
+                if (max !== null) input.max = max;
+
+            }
+
+
+            input.name = key;
+            input.required = true;
+            input.value = String(defaultValue);
+
+
+            const span = document.createElement('span');
+
+            span.textContent = label;
+
+
+            wrapper.appendChild(span);
+            wrapper.appendChild(input);
+
+            activeFields.appendChild(wrapper);
+
+        });
+
+
+        // Reset previous results.
+        document.getElementById('emptyState').hidden = false;
+        document.getElementById('resultState').hidden = true;
+        document.getElementById('error').hidden = true;
+
+    } catch (error) {
+
+        showError(error.message);
+
+    }
+
+}
+
+
+// --------------------------------------------------
+// NAVIGATION
+// --------------------------------------------------
+
+document.querySelectorAll('.navitem').forEach(button => {
+
+    button.addEventListener('click', () => {
+        loadDisease(button.dataset.disease);
+    });
+
+});
+
+
+// --------------------------------------------------
+// ERROR HANDLING
+// --------------------------------------------------
+
+function showError(message) {
+
+    const errorBox = document.getElementById('error');
+
+    errorBox.textContent = message;
+
+    errorBox.hidden = false;
+
+}
+
+
+// --------------------------------------------------
+// PREDICTION
+// --------------------------------------------------
+
+document.getElementById('predictForm').addEventListener(
+    'submit',
+    async event => {
+
+        event.preventDefault();
+
+        const button = document.getElementById('predictBtn');
+
+        button.disabled = true;
+        button.textContent = 'Analyzing...';
+
+        document.getElementById('error').hidden = true;
+
+
+        const payload = {};
+
+        new FormData(event.target).forEach((value, key) => {
+
+            payload[key] = value;
+
+        });
+
+
+        try {
+
+            const response = await fetch(
+                '/api/predict/' + current,
+                {
+                    method: 'POST',
+
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+
+                    body: JSON.stringify(payload)
+                }
+            );
+
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Prediction failed.');
+            }
+
+
+            // Show result.
+            document.getElementById('emptyState').hidden = true;
+
+            document.getElementById('resultState').hidden = false;
+
+
+            document.getElementById('resultLabel').textContent =
+                data.label;
+
+
+            // Model output score.
+            document.getElementById('confidenceValue').textContent =
+                data.model_score + '%';
+
+            document.getElementById('confidenceBar').style.width =
+                data.model_score + '%';
+
+
+            // Evaluation metrics.
+            document.getElementById('metricAccuracy').textContent =
+                (data.metrics.accuracy * 100).toFixed(1) + '%';
+
+            document.getElementById('metricBalanced').textContent =
+                (data.metrics.balanced_accuracy * 100).toFixed(1) + '%';
+
+            document.getElementById('metricAuc').textContent =
+                (data.metrics.roc_auc * 100).toFixed(1) + '%';
+
+
+            // Medical disclaimer.
+            document.getElementById('disclaimer').textContent =
+                data.disclaimer;
+
+
+        } catch (error) {
+
+            showError(error.message);
+
+        } finally {
+
+            button.disabled = false;
+
+            button.innerHTML =
+                'Run prediction <span>→</span>';
+
+        }
+
+    }
+);
+
+
+// --------------------------------------------------
+// RESET FORM
+// --------------------------------------------------
+
+document.getElementById('resetBtn').addEventListener(
+    'click',
+    () => {
+
+        setTimeout(() => {
+
+            document.getElementById('error').hidden = true;
+
+            document.getElementById('emptyState').hidden = false;
+
+            document.getElementById('resultState').hidden = true;
+
+        }, 0);
+
+    }
+);
+
+
+// --------------------------------------------------
+// INITIALIZE APPLICATION
+// --------------------------------------------------
+
+loadDisease('heart');
+
+</script>
+
+</body>
+</html>
