@@ -13,6 +13,20 @@ The project demonstrates an end-to-end machine learning workflow, from data prep
 
 > **Disclaimer:** MedScope AI is an educational project, not a medical device. It is not clinically validated and must not be used for diagnosis, treatment, or medical decision-making. Always consult a qualified healthcare professional.
 
+## Application Screenshots
+
+### 1. Dashboard
+
+![MedScope AI Homepage](screenshots/01-homepage.png)
+
+### 2. Heart Disease Input Form
+
+![Heart Disease Input Form](screenshots/02-heart-disease-input.png)
+
+### 3. Prediction Results
+
+![Heart Disease Prediction Result](screenshots/03-heart-disease-result.png)
+
 ## Supported Prediction Modules
 
 | Module | Dataset / Source | Model |
